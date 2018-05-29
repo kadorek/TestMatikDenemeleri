@@ -1,7 +1,12 @@
-﻿@model IEnumerable<TestMatik_V1.Models.Soru>
+﻿
+@model IEnumerable<TestMatik_V1.Models.Soru>
 
 @{
     ViewBag.Title = "Index";
+    var db = new TestMatik_V1.Models.VerilerEntities();
+    var TumDersler = (from d in db.Ders
+                      select new SelectListItem { Text = d.Ad, Value = d.Id.ToString() }).ToList();
+    TumDersler.Insert(0, new SelectListItem { Value = "0", Text = "Ders Seçiniz" });
 }
 
 <h2>Index</h2>
@@ -9,43 +14,59 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Metin)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EkMetin)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Seviye)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Konu.Ad)
-        </th>
-        <th></th>
-    </tr>
+<div>
+    @Html.DropDownList("slcDersler", TumDersler)
+    @Html.DropDownList("slcKonular", Enumerable.Empty<SelectListItem>())
+</div>
+<div id="lstSorular"></div>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Metin)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EkMetin)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Seviye)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Konu.Ad)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
+@section scripts{
+    <script>
+
+        $(document).ready(function () {
+            $("#slcDersler").on("change", function () {
+                $("#slcKonular").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("DersinKonulari")', // we are calling json method
+                    dataType: 'json',
+                    data: { id: $("#slcDersler").val() },
+                    success: function (konular) {
+                        // states contains the JSON formatted list
+                        // of states passed from the controller
+
+                        $("#slcKonular").append('<option value="' + "0" + '">' + "Konu Seçiniz" + '</option>');
+                        //debugger;
+                        $.each(konular, function (i, konu) {
+                            $("#slcKonular").append('<option value="' + konu.Value + '">' + konu.Text + '</option>');
+                            // here we are adding option for States
+                        });
+                        $("#lstSorular").empty();
+                        $("#lstSorular").load(
+                                '@Url.Action("KonuSorulari")',
+                            {id:$("#slcKonular").val()}
+                        )
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve konular.' + ex);
+                    }
+                });
+                return false;
+
+
+            })
+
+            $("#slcKonular").on("change", function () {
+                $("#lstSorular").empty();
+                $("#lstSorular").load(
+                     '@Url.Action("KonuSorulari")',
+                    {id:$("#slcKonular").val()}
+                )
+            })
+
+
+
+        });
+    </script>
+
 }
-
-</table>

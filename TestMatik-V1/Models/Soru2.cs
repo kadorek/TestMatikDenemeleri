@@ -9,5 +9,6 @@ namespace TestMatik_V1.Models
     [MetadataType(typeof(SoruMetadata))]
     public partial class Soru
     {
+        
     }
 }

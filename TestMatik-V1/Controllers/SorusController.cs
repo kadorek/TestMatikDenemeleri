@@ -120,6 +120,50 @@ namespace TestMatik_V1.Controllers
             return RedirectToAction("Index");
         }
 
+        public JsonResult DersinKonulari(string id)
+        {
+            if (id==null)
+            {
+                return null;
+            }
+
+            var dersId = Convert.ToInt32(id);
+            var konuListe = (from k in db.Konus
+                             where k.DersId == dersId
+                             select k).ToList();
+            return Json(new SelectList(konuListe, "Id", "Ad"));
+        }
+
+
+
+
+        public PartialViewResult KonuSorulari(string id) {
+            if (id==null)
+            {
+                id="0";
+            }
+
+            var kid = Convert.ToInt32(id);
+            var soruListesi = (from s in db.Sorus
+                               select s).ToList();
+            if (kid>0)
+            {
+                soruListesi = soruListesi.Where(x=>x.KonuId==kid).ToList();
+            }
+            return PartialView("_SoruListesi", soruListesi);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
