@@ -1,0 +1,670 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="VerilerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Ders">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Ad" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Konu">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Ad" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="DersId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Secenek">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Metin" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="AktifMi" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sinav">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Ad" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Olusturma" Type="datetime" Nullable="false" />
+          <Property Name="SecenekAdet" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Soru">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Metin" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="EkMetin" Type="nvarchar" MaxLength="150" />
+          <Property Name="KonuId" Type="int" Nullable="false" />
+          <Property Name="Seviye" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SoruSecenek">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SoruId" Type="int" Nullable="false" />
+          <Property Name="SecenekId" Type="int" Nullable="false" />
+          <Property Name="DogruMu" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SoruSinavSecenek">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SinavId" Type="int" Nullable="false" />
+          <Property Name="SoruId" Type="int" Nullable="false" />
+          <Property Name="A" Type="int" Nullable="false" />
+          <Property Name="B" Type="int" Nullable="false" />
+          <Property Name="C" Type="int" Nullable="false" />
+          <Property Name="D" Type="int" Nullable="false" />
+          <Property Name="E" Type="int" />
+          <Property Name="DogruSecenekSira" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Ad" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Soyad" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'C:\USERS\KADOREK\SOURCE\REPOS\TESTMATIKDENEMELERI\TESTMATIK-V1\APP_DATA\VERILER.MDF.dbo.DersKonu' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <Association Name="FK_Konu_ToTable">
+          <End Role="Ders" Type="Self.Ders" Multiplicity="1" />
+          <End Role="Konu" Type="Self.Konu" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ders">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Konu">
+              <PropertyRef Name="DersId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Soru_ToTable">
+          <End Role="Konu" Type="Self.Konu" Multiplicity="1" />
+          <End Role="Soru" Type="Self.Soru" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Konu">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Soru">
+              <PropertyRef Name="KonuId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSecenek_ToTable">
+          <End Role="Soru" Type="Self.Soru" Multiplicity="1" />
+          <End Role="SoruSecenek" Type="Self.SoruSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Soru">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSecenek">
+              <PropertyRef Name="SoruId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSecenek_ToTable_1">
+          <End Role="Secenek" Type="Self.Secenek" Multiplicity="1" />
+          <End Role="SoruSecenek" Type="Self.SoruSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Secenek">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSecenek">
+              <PropertyRef Name="SecenekId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSinavSecenek_ToTable">
+          <End Role="Sinav" Type="Self.Sinav" Multiplicity="1" />
+          <End Role="SoruSinavSecenek" Type="Self.SoruSinavSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sinav">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSinavSecenek">
+              <PropertyRef Name="SinavId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSinavSecenek_ToTable_1">
+          <End Role="Soru" Type="Self.Soru" Multiplicity="1" />
+          <End Role="SoruSinavSecenek" Type="Self.SoruSinavSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Soru">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSinavSecenek">
+              <PropertyRef Name="SoruId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSinavSecenek_ToTable_2">
+          <End Role="SoruSecenek" Type="Self.SoruSecenek" Multiplicity="1" />
+          <End Role="SoruSinavSecenek" Type="Self.SoruSinavSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SoruSecenek">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSinavSecenek">
+              <PropertyRef Name="A" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSinavSecenek_ToTable_3">
+          <End Role="SoruSecenek" Type="Self.SoruSecenek" Multiplicity="1" />
+          <End Role="SoruSinavSecenek" Type="Self.SoruSinavSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SoruSecenek">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSinavSecenek">
+              <PropertyRef Name="B" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSinavSecenek_ToTable_4">
+          <End Role="SoruSecenek" Type="Self.SoruSecenek" Multiplicity="1" />
+          <End Role="SoruSinavSecenek" Type="Self.SoruSinavSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SoruSecenek">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSinavSecenek">
+              <PropertyRef Name="C" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSinavSecenek_ToTable_5">
+          <End Role="SoruSecenek" Type="Self.SoruSecenek" Multiplicity="1" />
+          <End Role="SoruSinavSecenek" Type="Self.SoruSinavSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SoruSecenek">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSinavSecenek">
+              <PropertyRef Name="D" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSinavSecenek_ToTable_6">
+          <End Role="SoruSecenek" Type="Self.SoruSecenek" Multiplicity="0..1" />
+          <End Role="SoruSinavSecenek" Type="Self.SoruSinavSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SoruSecenek">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSinavSecenek">
+              <PropertyRef Name="E" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="VerilerModelStoreContainer">
+          <EntitySet Name="Ders" EntityType="Self.Ders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Konu" EntityType="Self.Konu" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Secenek" EntityType="Self.Secenek" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sinav" EntityType="Self.Sinav" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Soru" EntityType="Self.Soru" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SoruSecenek" EntityType="Self.SoruSecenek" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SoruSinavSecenek" EntityType="Self.SoruSinavSecenek" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Konu_ToTable" Association="Self.FK_Konu_ToTable">
+            <End Role="Ders" EntitySet="Ders" />
+            <End Role="Konu" EntitySet="Konu" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Soru_ToTable" Association="Self.FK_Soru_ToTable">
+            <End Role="Konu" EntitySet="Konu" />
+            <End Role="Soru" EntitySet="Soru" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSecenek_ToTable" Association="Self.FK_SoruSecenek_ToTable">
+            <End Role="Soru" EntitySet="Soru" />
+            <End Role="SoruSecenek" EntitySet="SoruSecenek" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSecenek_ToTable_1" Association="Self.FK_SoruSecenek_ToTable_1">
+            <End Role="Secenek" EntitySet="Secenek" />
+            <End Role="SoruSecenek" EntitySet="SoruSecenek" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSinavSecenek_ToTable" Association="Self.FK_SoruSinavSecenek_ToTable">
+            <End Role="Sinav" EntitySet="Sinav" />
+            <End Role="SoruSinavSecenek" EntitySet="SoruSinavSecenek" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSinavSecenek_ToTable_1" Association="Self.FK_SoruSinavSecenek_ToTable_1">
+            <End Role="Soru" EntitySet="Soru" />
+            <End Role="SoruSinavSecenek" EntitySet="SoruSinavSecenek" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSinavSecenek_ToTable_2" Association="Self.FK_SoruSinavSecenek_ToTable_2">
+            <End Role="SoruSecenek" EntitySet="SoruSecenek" />
+            <End Role="SoruSinavSecenek" EntitySet="SoruSinavSecenek" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSinavSecenek_ToTable_3" Association="Self.FK_SoruSinavSecenek_ToTable_3">
+            <End Role="SoruSecenek" EntitySet="SoruSecenek" />
+            <End Role="SoruSinavSecenek" EntitySet="SoruSinavSecenek" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSinavSecenek_ToTable_4" Association="Self.FK_SoruSinavSecenek_ToTable_4">
+            <End Role="SoruSecenek" EntitySet="SoruSecenek" />
+            <End Role="SoruSinavSecenek" EntitySet="SoruSinavSecenek" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSinavSecenek_ToTable_5" Association="Self.FK_SoruSinavSecenek_ToTable_5">
+            <End Role="SoruSecenek" EntitySet="SoruSecenek" />
+            <End Role="SoruSinavSecenek" EntitySet="SoruSinavSecenek" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSinavSecenek_ToTable_6" Association="Self.FK_SoruSinavSecenek_ToTable_6">
+            <End Role="SoruSecenek" EntitySet="SoruSecenek" />
+            <End Role="SoruSinavSecenek" EntitySet="SoruSinavSecenek" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="VerilerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Der">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Ad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Konus" Relationship="Self.FK_Konu_ToTable" FromRole="Ders" ToRole="Konu" />
+        </EntityType>
+        <EntityType Name="Konu">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Ad" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DersId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Der" Relationship="Self.FK_Konu_ToTable" FromRole="Konu" ToRole="Ders" />
+          <NavigationProperty Name="Sorus" Relationship="Self.FK_Soru_ToTable" FromRole="Konu" ToRole="Soru" />
+        </EntityType>
+        <EntityType Name="Secenek">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Metin" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AktifMi" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="SoruSeceneks" Relationship="Self.FK_SoruSecenek_ToTable_1" FromRole="Secenek" ToRole="SoruSecenek" />
+        </EntityType>
+        <EntityType Name="Sinav">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Ad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Olusturma" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SecenekAdet" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="SoruSinavSeceneks" Relationship="Self.FK_SoruSinavSecenek_ToTable" FromRole="Sinav" ToRole="SoruSinavSecenek" />
+        </EntityType>
+        <EntityType Name="Soru">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Metin" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EkMetin" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="true" />
+          <Property Name="KonuId" Type="Int32" Nullable="false" />
+          <Property Name="Seviye" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="Konu" Relationship="Self.FK_Soru_ToTable" FromRole="Soru" ToRole="Konu" />
+          <NavigationProperty Name="SoruSeceneks" Relationship="Self.FK_SoruSecenek_ToTable" FromRole="Soru" ToRole="SoruSecenek" />
+          <NavigationProperty Name="SoruSinavSeceneks" Relationship="Self.FK_SoruSinavSecenek_ToTable_1" FromRole="Soru" ToRole="SoruSinavSecenek" />
+        </EntityType>
+        <EntityType Name="SoruSecenek">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SoruId" Type="Int32" Nullable="false" />
+          <Property Name="SecenekId" Type="Int32" Nullable="false" />
+          <Property Name="DogruMu" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Secenek" Relationship="Self.FK_SoruSecenek_ToTable_1" FromRole="SoruSecenek" ToRole="Secenek" />
+          <NavigationProperty Name="Soru" Relationship="Self.FK_SoruSecenek_ToTable" FromRole="SoruSecenek" ToRole="Soru" />
+          <NavigationProperty Name="SoruSinavSeceneks" Relationship="Self.FK_SoruSinavSecenek_ToTable_2" FromRole="SoruSecenek" ToRole="SoruSinavSecenek" />
+          <NavigationProperty Name="SoruSinavSeceneks1" Relationship="Self.FK_SoruSinavSecenek_ToTable_3" FromRole="SoruSecenek" ToRole="SoruSinavSecenek" />
+          <NavigationProperty Name="SoruSinavSeceneks2" Relationship="Self.FK_SoruSinavSecenek_ToTable_4" FromRole="SoruSecenek" ToRole="SoruSinavSecenek" />
+          <NavigationProperty Name="SoruSinavSeceneks3" Relationship="Self.FK_SoruSinavSecenek_ToTable_5" FromRole="SoruSecenek" ToRole="SoruSinavSecenek" />
+          <NavigationProperty Name="SoruSinavSeceneks4" Relationship="Self.FK_SoruSinavSecenek_ToTable_6" FromRole="SoruSecenek" ToRole="SoruSinavSecenek" />
+        </EntityType>
+        <EntityType Name="SoruSinavSecenek">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SinavId" Type="Int32" Nullable="false" />
+          <Property Name="SoruId" Type="Int32" Nullable="false" />
+          <Property Name="A" Type="Int32" Nullable="false" />
+          <Property Name="B" Type="Int32" Nullable="false" />
+          <Property Name="C" Type="Int32" Nullable="false" />
+          <Property Name="D" Type="Int32" Nullable="false" />
+          <Property Name="E" Type="Int32" />
+          <Property Name="DogruSecenekSira" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="Sinav" Relationship="Self.FK_SoruSinavSecenek_ToTable" FromRole="SoruSinavSecenek" ToRole="Sinav" />
+          <NavigationProperty Name="Soru" Relationship="Self.FK_SoruSinavSecenek_ToTable_1" FromRole="SoruSinavSecenek" ToRole="Soru" />
+          <NavigationProperty Name="SoruSecenek" Relationship="Self.FK_SoruSinavSecenek_ToTable_2" FromRole="SoruSinavSecenek" ToRole="SoruSecenek" />
+          <NavigationProperty Name="SoruSecenek1" Relationship="Self.FK_SoruSinavSecenek_ToTable_3" FromRole="SoruSinavSecenek" ToRole="SoruSecenek" />
+          <NavigationProperty Name="SoruSecenek2" Relationship="Self.FK_SoruSinavSecenek_ToTable_4" FromRole="SoruSinavSecenek" ToRole="SoruSecenek" />
+          <NavigationProperty Name="SoruSecenek3" Relationship="Self.FK_SoruSinavSecenek_ToTable_5" FromRole="SoruSinavSecenek" ToRole="SoruSecenek" />
+          <NavigationProperty Name="SoruSecenek4" Relationship="Self.FK_SoruSinavSecenek_ToTable_6" FromRole="SoruSinavSecenek" ToRole="SoruSecenek" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Ad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Soyad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Username" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Konu_ToTable">
+          <End Role="Ders" Type="Self.Der" Multiplicity="1" />
+          <End Role="Konu" Type="Self.Konu" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ders">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Konu">
+              <PropertyRef Name="DersId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Soru_ToTable">
+          <End Role="Konu" Type="Self.Konu" Multiplicity="1" />
+          <End Role="Soru" Type="Self.Soru" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Konu">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Soru">
+              <PropertyRef Name="KonuId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSecenek_ToTable_1">
+          <End Role="Secenek" Type="Self.Secenek" Multiplicity="1" />
+          <End Role="SoruSecenek" Type="Self.SoruSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Secenek">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSecenek">
+              <PropertyRef Name="SecenekId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSinavSecenek_ToTable">
+          <End Role="Sinav" Type="Self.Sinav" Multiplicity="1" />
+          <End Role="SoruSinavSecenek" Type="Self.SoruSinavSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sinav">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSinavSecenek">
+              <PropertyRef Name="SinavId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSecenek_ToTable">
+          <End Role="Soru" Type="Self.Soru" Multiplicity="1" />
+          <End Role="SoruSecenek" Type="Self.SoruSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Soru">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSecenek">
+              <PropertyRef Name="SoruId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSinavSecenek_ToTable_1">
+          <End Role="Soru" Type="Self.Soru" Multiplicity="1" />
+          <End Role="SoruSinavSecenek" Type="Self.SoruSinavSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Soru">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSinavSecenek">
+              <PropertyRef Name="SoruId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSinavSecenek_ToTable_2">
+          <End Role="SoruSecenek" Type="Self.SoruSecenek" Multiplicity="1" />
+          <End Role="SoruSinavSecenek" Type="Self.SoruSinavSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SoruSecenek">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSinavSecenek">
+              <PropertyRef Name="A" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSinavSecenek_ToTable_3">
+          <End Role="SoruSecenek" Type="Self.SoruSecenek" Multiplicity="1" />
+          <End Role="SoruSinavSecenek" Type="Self.SoruSinavSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SoruSecenek">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSinavSecenek">
+              <PropertyRef Name="B" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSinavSecenek_ToTable_4">
+          <End Role="SoruSecenek" Type="Self.SoruSecenek" Multiplicity="1" />
+          <End Role="SoruSinavSecenek" Type="Self.SoruSinavSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SoruSecenek">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSinavSecenek">
+              <PropertyRef Name="C" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSinavSecenek_ToTable_5">
+          <End Role="SoruSecenek" Type="Self.SoruSecenek" Multiplicity="1" />
+          <End Role="SoruSinavSecenek" Type="Self.SoruSinavSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SoruSecenek">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSinavSecenek">
+              <PropertyRef Name="D" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SoruSinavSecenek_ToTable_6">
+          <End Role="SoruSecenek" Type="Self.SoruSecenek" Multiplicity="0..1" />
+          <End Role="SoruSinavSecenek" Type="Self.SoruSinavSecenek" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SoruSecenek">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SoruSinavSecenek">
+              <PropertyRef Name="E" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="VerilerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Ders" EntityType="Self.Der" />
+          <EntitySet Name="Konus" EntityType="Self.Konu" />
+          <EntitySet Name="Seceneks" EntityType="Self.Secenek" />
+          <EntitySet Name="Sinavs" EntityType="Self.Sinav" />
+          <EntitySet Name="Sorus" EntityType="Self.Soru" />
+          <EntitySet Name="SoruSeceneks" EntityType="Self.SoruSecenek" />
+          <EntitySet Name="SoruSinavSeceneks" EntityType="Self.SoruSinavSecenek" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_Konu_ToTable" Association="Self.FK_Konu_ToTable">
+            <End Role="Ders" EntitySet="Ders" />
+            <End Role="Konu" EntitySet="Konus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Soru_ToTable" Association="Self.FK_Soru_ToTable">
+            <End Role="Konu" EntitySet="Konus" />
+            <End Role="Soru" EntitySet="Sorus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSecenek_ToTable_1" Association="Self.FK_SoruSecenek_ToTable_1">
+            <End Role="Secenek" EntitySet="Seceneks" />
+            <End Role="SoruSecenek" EntitySet="SoruSeceneks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSinavSecenek_ToTable" Association="Self.FK_SoruSinavSecenek_ToTable">
+            <End Role="Sinav" EntitySet="Sinavs" />
+            <End Role="SoruSinavSecenek" EntitySet="SoruSinavSeceneks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSecenek_ToTable" Association="Self.FK_SoruSecenek_ToTable">
+            <End Role="Soru" EntitySet="Sorus" />
+            <End Role="SoruSecenek" EntitySet="SoruSeceneks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSinavSecenek_ToTable_1" Association="Self.FK_SoruSinavSecenek_ToTable_1">
+            <End Role="Soru" EntitySet="Sorus" />
+            <End Role="SoruSinavSecenek" EntitySet="SoruSinavSeceneks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSinavSecenek_ToTable_2" Association="Self.FK_SoruSinavSecenek_ToTable_2">
+            <End Role="SoruSecenek" EntitySet="SoruSeceneks" />
+            <End Role="SoruSinavSecenek" EntitySet="SoruSinavSeceneks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSinavSecenek_ToTable_3" Association="Self.FK_SoruSinavSecenek_ToTable_3">
+            <End Role="SoruSecenek" EntitySet="SoruSeceneks" />
+            <End Role="SoruSinavSecenek" EntitySet="SoruSinavSeceneks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSinavSecenek_ToTable_4" Association="Self.FK_SoruSinavSecenek_ToTable_4">
+            <End Role="SoruSecenek" EntitySet="SoruSeceneks" />
+            <End Role="SoruSinavSecenek" EntitySet="SoruSinavSeceneks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSinavSecenek_ToTable_5" Association="Self.FK_SoruSinavSecenek_ToTable_5">
+            <End Role="SoruSecenek" EntitySet="SoruSeceneks" />
+            <End Role="SoruSinavSecenek" EntitySet="SoruSinavSeceneks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoruSinavSecenek_ToTable_6" Association="Self.FK_SoruSinavSecenek_ToTable_6">
+            <End Role="SoruSecenek" EntitySet="SoruSeceneks" />
+            <End Role="SoruSinavSecenek" EntitySet="SoruSinavSeceneks" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="VerilerModelStoreContainer" CdmEntityContainer="VerilerEntities">
+          <EntitySetMapping Name="Ders">
+            <EntityTypeMapping TypeName="VerilerModel.Der">
+              <MappingFragment StoreEntitySet="Ders">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Ad" ColumnName="Ad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Konus">
+            <EntityTypeMapping TypeName="VerilerModel.Konu">
+              <MappingFragment StoreEntitySet="Konu">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Ad" ColumnName="Ad" />
+                <ScalarProperty Name="DersId" ColumnName="DersId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Seceneks">
+            <EntityTypeMapping TypeName="VerilerModel.Secenek">
+              <MappingFragment StoreEntitySet="Secenek">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Metin" ColumnName="Metin" />
+                <ScalarProperty Name="AktifMi" ColumnName="AktifMi" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sinavs">
+            <EntityTypeMapping TypeName="VerilerModel.Sinav">
+              <MappingFragment StoreEntitySet="Sinav">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Ad" ColumnName="Ad" />
+                <ScalarProperty Name="Olusturma" ColumnName="Olusturma" />
+                <ScalarProperty Name="SecenekAdet" ColumnName="SecenekAdet" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sorus">
+            <EntityTypeMapping TypeName="VerilerModel.Soru">
+              <MappingFragment StoreEntitySet="Soru">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Metin" ColumnName="Metin" />
+                <ScalarProperty Name="EkMetin" ColumnName="EkMetin" />
+                <ScalarProperty Name="KonuId" ColumnName="KonuId" />
+                <ScalarProperty Name="Seviye" ColumnName="Seviye" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SoruSeceneks">
+            <EntityTypeMapping TypeName="VerilerModel.SoruSecenek">
+              <MappingFragment StoreEntitySet="SoruSecenek">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SoruId" ColumnName="SoruId" />
+                <ScalarProperty Name="SecenekId" ColumnName="SecenekId" />
+                <ScalarProperty Name="DogruMu" ColumnName="DogruMu" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SoruSinavSeceneks">
+            <EntityTypeMapping TypeName="VerilerModel.SoruSinavSecenek">
+              <MappingFragment StoreEntitySet="SoruSinavSecenek">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SinavId" ColumnName="SinavId" />
+                <ScalarProperty Name="SoruId" ColumnName="SoruId" />
+                <ScalarProperty Name="A" ColumnName="A" />
+                <ScalarProperty Name="B" ColumnName="B" />
+                <ScalarProperty Name="C" ColumnName="C" />
+                <ScalarProperty Name="D" ColumnName="D" />
+                <ScalarProperty Name="E" ColumnName="E" />
+                <ScalarProperty Name="DogruSecenekSira" ColumnName="DogruSecenekSira" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="VerilerModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Ad" ColumnName="Ad" />
+                <ScalarProperty Name="Soyad" ColumnName="Soyad" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

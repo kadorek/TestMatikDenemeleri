@@ -1,0 +1,24 @@
+﻿@model TestMatik_V1.Models.UserLoginModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+
+<div>
+    @using (Html.BeginForm("Login", "Users", new { returnUrl = Request.QueryString["returnUrl"] }, FormMethod.Post))
+    {
+
+        <div>
+            Kullanıcı Adı : @Html.EditorFor(model => model.Username)
+        </div>
+        <div>
+            Şifre : @Html.EditorFor(model => model.Password, new { placeholder = "password" })
+        </div>
+        <div>
+            <input id="btnGiris" type="submit" value="Giriş" />
+        </div>
+    }
+
+</div>

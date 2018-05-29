@@ -1,0 +1,50 @@
+﻿@model TestMatik_V1.Models.Soru
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Soru</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Metin)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Metin)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EkMetin)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EkMetin)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Seviye)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Seviye)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Konu.Ad)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Konu.Ad)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
