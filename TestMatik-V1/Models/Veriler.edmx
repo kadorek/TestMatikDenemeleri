@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="VerilerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="VerilerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Ders">
           <Key>
             <PropertyRef Name="Id" />
@@ -80,8 +80,6 @@
           <Property Name="Username" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="20" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'C:\USERS\KADOREK\SOURCE\REPOS\TESTMATIKDENEMELERI\TESTMATIK-V1\APP_DATA\VERILER.MDF.dbo.DersKonu' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <Association Name="FK_Konu_ToTable">
           <End Role="Ders" Type="Self.Ders" Multiplicity="1" />
           <End Role="Konu" Type="Self.Konu" Multiplicity="*" />
@@ -268,7 +266,8 @@ warning 6002: The table/view 'C:\USERS\KADOREK\SOURCE\REPOS\TESTMATIKDENEMELERI\
             <End Role="SoruSinavSecenek" EntitySet="SoruSinavSecenek" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="VerilerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -315,7 +314,7 @@ warning 6002: The table/view 'C:\USERS\KADOREK\SOURCE\REPOS\TESTMATIKDENEMELERI\
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Metin" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="EkMetin" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="true" />
+          <Property Name="EkMetin" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="KonuId" Type="Int32" Nullable="false" />
           <Property Name="Seviye" Type="Byte" Nullable="false" />
           <NavigationProperty Name="Konu" Relationship="Self.FK_Soru_ToTable" FromRole="Soru" ToRole="Konu" />

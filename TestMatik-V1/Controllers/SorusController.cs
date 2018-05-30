@@ -82,7 +82,7 @@ namespace TestMatik_V1.Controllers
         // daha fazla bilgi için https://go.microsoft.com/fwlink/?LinkId=317598 sayfasına bakın.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Metin,EkMetin,KonuId,Seviye")] Soru soru)
+        public ActionResult Edit([Bind(Include = "Id,Metin,KonuId,Seviye")] Soru soru)
         {
             if (ModelState.IsValid)
             {

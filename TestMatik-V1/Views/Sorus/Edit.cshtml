@@ -2,6 +2,10 @@
 
 @{
     ViewBag.Title = "Edit";
+    var db = new TestMatik_V1.Models.VerilerEntities();
+    var TumDersler = db.Ders.ToList();
+    TumDersler.Insert(0, new TestMatik_V1.Models.Der { Id = 0, Ad = "Ders Seçiniz" });
+
 }
 
 <h2>Edit</h2>
@@ -10,7 +14,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Soru</h4>
         <hr />
@@ -25,11 +29,18 @@
             </div>
         </div>
 
-        <div class="form-group">
+        @*<div class="form-group">
             @Html.LabelFor(model => model.EkMetin, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.EkMetin, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.EkMetin, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+        <div class="form-group">
+            @Html.Label("Ders", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("slcDersler", new SelectList(TumDersler, "Id", "Ad"), htmlAttributes: new { @class = "form-control" })
             </div>
         </div>
 
@@ -63,4 +74,34 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $("#KonuId").empty();
+            $("#slcDersler").on("change", function () {
+                $("#KonuId").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("DersinKonulari")', // we are calling json method
+                    dataType: 'json',
+                    data: { id: $("#slcDersler").val() },
+                    success: function (konular) {
+                        // states contains the JSON formatted list
+                        // of states passed from the controller
+
+                        $("#KonuId").append('<option value="' + "0" + '">' + "Konu Seçiniz" + '</option>');
+                        //debugger;
+                        $.each(konular, function (i, konu) {
+                            $("#KonuId").append('<option value="' + konu.Value + '">' + konu.Text + '</option>');
+                            // here we are adding option for States
+                        });
+                       
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve konular.' + ex);
+                    }
+                });
+
+            })
+        });
+    </script>
 }
