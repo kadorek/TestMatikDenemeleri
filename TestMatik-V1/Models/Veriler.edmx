@@ -312,7 +312,7 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" ConcurrencyMode="None" />
           <Property Name="Metin" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="EkMetin" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="KonuId" Type="Int32" Nullable="false" />

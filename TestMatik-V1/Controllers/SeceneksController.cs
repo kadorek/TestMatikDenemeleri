@@ -115,6 +115,16 @@ namespace TestMatik_V1.Controllers
             return RedirectToAction("Index");
         }
 
+
+        public PartialViewResult SecenekEkleControl(int n) {
+            return PartialView("_SecenekEkleControl", n);
+        }
+
+        public PartialViewResult SecenekEditor(Secenek s) {
+            return PartialView("_SecenekEditor",s);
+        }
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -29,15 +29,8 @@
             </div>
         </div>
 
+        @Html.Partial("_DersKonuSelector",Model)
         @*<div class="form-group">
-            @Html.LabelFor(model => model.EkMetin, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EkMetin, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EkMetin, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
-
-        <div class="form-group">
             @Html.Label("Ders", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("slcDersler", new SelectList(TumDersler, "Id", "Ad"), htmlAttributes: new { @class = "form-control" })
@@ -50,7 +43,7 @@
                 @Html.DropDownList("KonuId", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.KonuId, "", new { @class = "text-danger" })
             </div>
-        </div>
+        </div>*@
 
         <div class="form-group">
             @Html.LabelFor(model => model.Seviye, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -74,7 +67,7 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script>
+    @*<script>
         $(document).ready(function () {
             $("#KonuId").empty();
             $("#slcDersler").on("change", function () {
@@ -103,5 +96,5 @@
 
             })
         });
-    </script>
+    </script>*@
 }

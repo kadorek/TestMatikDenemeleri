@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -87,7 +89,10 @@ namespace TestMatik_V1.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(soru).State = EntityState.Modified;
-                db.SaveChanges();
+
+               
+                    db.SaveChanges();
+               
                 return RedirectToAction("Index");
             }
             ViewBag.KonuId = new SelectList(db.Konus, "Id", "Ad", soru.KonuId);
@@ -137,19 +142,27 @@ namespace TestMatik_V1.Controllers
 
 
 
-        public PartialViewResult KonuSorulari(string id) {
-            if (id==null)
+        public PartialViewResult KonuSorulari(string DersId, string KonuId) {
+            if (KonuId==null)
             {
-                id="0";
+                KonuId="0";
             }
 
-            var kid = Convert.ToInt32(id);
+            var kid = Convert.ToInt32(KonuId);
             var soruListesi = (from s in db.Sorus
                                select s).ToList();
-            if (kid>0)
+            switch (kid)
             {
+                case 0:
+                    soruListesi = soruListesi.Where(x=>x.Konu.DersId.ToString()==DersId).ToList();
+                    break;
+                default:
                 soruListesi = soruListesi.Where(x=>x.KonuId==kid).ToList();
+                    break;
             }
+            //if (kid>0)
+            //{
+            //}
             return PartialView("_SoruListesi", soruListesi);
         }
 

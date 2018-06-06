@@ -1,0 +1,32 @@
+﻿@model System.Nullable<Int32>
+<div id='@("SecenekKontrol"+Model)'>
+    @Html.Label("Metin", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-3">
+        @Html.Editor("txtSecenekMetin" + Model, "tinymce_jquery_full_secenek", additionalViewData: new { id = "txtSecenekMetin" + Model })
+    </div>
+    <div class="col-md-2">
+        <a class="btn" id='@("btnCikar"+Model)' n="@Model">Çıkar</a>
+    </div>
+</div>
+@*<div class="form-group">
+        @Html.LabelFor(model => model.AktifMi, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @Html.EditorFor(model => model.AktifMi)
+                @Html.ValidationMessageFor(model => model.AktifMi, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>*@
+
+@using (var sc=Html.BeginScriptContext()) {
+    sc.AddScriptBlock(
+        @<script>
+            $(document).ready(function () {
+                $("#btnCikar" +@(Model)).on("click", function (e) {
+                    var target = $('#@("SecenekKontrol"+Model)');
+                    target.remove();
+                });
+            });
+        </script>
+        , true);
+}

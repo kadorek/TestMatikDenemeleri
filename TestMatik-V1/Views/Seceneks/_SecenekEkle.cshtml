@@ -1,0 +1,31 @@
+﻿
+<div class="container">
+    <h3>Seçenekler</h3>
+    <div>
+        <button type="button" class="btn" id="SecenekKontrolEkle">Ekle</button>
+    </div>
+    <div id="divControlList" style="max-height:500px; overflow-y:scroll;">
+
+    </div>
+</div>
+<div>
+
+</div>
+
+
+@using (var sc = Html.BeginScriptContext())
+{
+    sc.AddScriptBlock(
+    @<script>
+        var number = 0;
+        $(document).ready(function () {
+            var liste = $("#divControlList");
+            $("#SecenekKontrolEkle").on("click", function () {
+                $.get('@Url.Action("SecenekEkleControl","Seceneks")', { n: number++ }, function (r) {
+                    liste.append(r);                   
+                })
+            });
+        });
+    </script>
+    , true);
+}

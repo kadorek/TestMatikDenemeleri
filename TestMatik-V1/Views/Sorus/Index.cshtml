@@ -43,8 +43,8 @@
                         });
                         $("#lstSorular").empty();
                         $("#lstSorular").load(
-                                '@Url.Action("KonuSorulari")',
-                            {id:$("#slcKonular").val()}
+                            '@Url.Action("KonuSorulari")',
+                            { KonuId: $("#slcKonular").val(), DersId:$("#slcDersler").val() }
                         )
                     },
                     error: function (ex) {
@@ -59,8 +59,8 @@
             $("#slcKonular").on("change", function () {
                 $("#lstSorular").empty();
                 $("#lstSorular").load(
-                     '@Url.Action("KonuSorulari")',
-                    {id:$("#slcKonular").val()}
+                    '@Url.Action("KonuSorulari")',
+                    { KonuId: $("#slcKonular").val(), DersId:$("#slcDersler").val() }
                 )
             })
 

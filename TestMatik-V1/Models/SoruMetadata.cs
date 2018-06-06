@@ -8,7 +8,7 @@ using System.Web.Mvc;
 namespace TestMatik_V1.Models
 {
 
-    [Bind(Exclude = "ID")]
+    //[Bind(Exclude = "ID")]
     public class SoruMetadata
     {
         [UIHint("tinymce_jquery_full"), AllowHtml]
