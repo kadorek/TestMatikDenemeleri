@@ -1,4 +1,5 @@
 ﻿@using Forloop.HtmlHelpers
+@using Newtonsoft.Json
 
 @model TestMatik_V1.Models.Soru
 
@@ -8,19 +9,32 @@
     var TumDersler = db.Ders.ToList();
     TumDersler.Insert(0, new TestMatik_V1.Models.Der { Id = 0, Ad = "Ders Seçiniz" });
 
+    var konular = new List<TestMatik_V1.Models.Konu>();
+    if (Model.KonuId > 0)
+    {
+        konular = Model.Konu.Der.Konus.ToList();
+    }
+
 }
 
 <div class="form-group">
     @Html.Label("Ders", htmlAttributes: new { @class = "control-label col-md-2" })
     <div class="col-md-10">
-        @Html.DropDownList("slcDersler", new SelectList(TumDersler, "Id", "Ad"), htmlAttributes: new { @class = "form-control" })
+        @Html.DropDownList("slcDersler", new SelectList(TumDersler, "Id", "Ad", Model.Konu != null ? Model.Konu.DersId : 0), htmlAttributes: new { @class = "form-control" })
     </div>
 </div>
 
 <div class="form-group">
     @Html.LabelFor(model => model.KonuId, "KonuId", htmlAttributes: new { @class = "control-label col-md-2" })
     <div class="col-md-10">
-        @Html.DropDownList("KonuId", null, htmlAttributes: new { @class = "form-control" })
+        @*<select id="KonuId" name="KonuId" class="form-control">
+            @foreach (var k in konular)
+            {
+                <option value="@k.Id" @(k.Id == Model.KonuId ? "selected" : "")>@k.Ad</option>
+            }
+        </select>
+        @(konular.Count)*@
+        @Html.DropDownList("KonuId", new SelectList(konular,"Id","Ad",Model.KonuId>0?Model.KonuId:0), htmlAttributes: new { @class = "form-control" })
         @Html.ValidationMessageFor(model => model.KonuId, "", new { @class = "text-danger" })
     </div>
 </div>
@@ -29,9 +43,10 @@
 @using (Html.BeginScriptContext())
 {
     Html.AddScriptBlock(
-    @<script type="text/javascript">
-            $(document).ready(function () {
-                $("#KonuId").empty();
+@<script type="text/javascript">
+        $(document).ready(function () {
+            @*console.log("@(JsonConvert.SerializeObject(konular,new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore,Formatting=Formatting.None, StringEscapeHandling=StringEscapeHandling.Default}))");*@
+                //$("#KonuId").empty();
                 $("#slcDersler").on("change", function () {
                     $("#KonuId").empty();
                     $.ajax({
@@ -58,6 +73,6 @@
 
                 })
             });
-    </script>
-    , true);
+</script>
+, true);
 }

@@ -116,14 +116,22 @@ namespace TestMatik_V1.Controllers
         }
 
 
-        public PartialViewResult SecenekEkleControl(int n) {
+        public PartialViewResult SecenekEkleControl(int n)
+        {
             return PartialView("_SecenekEkleControl", n);
         }
 
-        public PartialViewResult SecenekEditor(Secenek s) {
-            return PartialView("_SecenekEditor",s);
+        public ActionResult SecenekEditor(Soru s, int? index)
+        {
+            ViewBag.index = index ?? 0;
+            return PartialView("_SecenekEditor", s);
         }
 
+
+        public ActionResult YeniSecenekEditor(Soru s, int? yindex) {
+            ViewBag.yindex = yindex;
+            return PartialView("_YeniSecenekEditor",s);
+        }
 
         protected override void Dispose(bool disposing)
         {

@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Create";
+
+    int index = Model.SecenekList.Count();
 }
 
 <h2>Create</h2>
@@ -19,7 +21,7 @@
         <div class=" row">
             <div class="col-sm-6">
 
-                @Html.Partial("_DersKonuSelector")
+                @Html.Partial("_DersKonuSelector",Model)
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.Metin, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -39,12 +41,20 @@
 
             </div>
             <div class="col-sm-6">
-                <a class="btn" id="btnAddSecenek">Seçenek Ekle</a>
-                <div id="divSecenekler">
+                <div>
+                    <h4 style="float:left; margin-right:10px;">Seçenekler</h4>
+                    @Ajax.ActionLink(linkText: "+", actionName: "SecenekEditor", controllerName: "Seceneks", routeValues: new { index = index }, ajaxOptions: new AjaxOptions
+                    {
+                        InsertionMode = InsertionMode.InsertAfter,
+                        UpdateTargetId = "secenekler",
+                        OnSuccess = "indexIterate"
+                    },
+                         htmlAttributes: new { id = "addSecenek", @class = "btn btn-default" })
 
                 </div>
-               @Html.EditorFor(x=>Model.SoruSeceneks)
-                @*@Html.Partial("../Seceneks/_SecenekEkle")*@
+                <div id="secenekler">
+                </div>
+
             </div>
         </div>
 
@@ -62,13 +72,27 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/ajax")
     <script>
+        var currentIndex = 0;
+        function indexIterate() {
+            var tag = $("#addSecenek");
+            console.log("tag")
+            console.log(tag)
+            var newHref = $(tag[0]).prop("href");
+            console.log("href")
+            console.log(newHref);
+            var newerHref = newHref.replace(/(?:index=)[0-9]+/i, "index=" + ++currentIndex);
+            $("#addSecenek").attr("href", newerHref);
+        };
+
         $(document).ready(function () {
             $("#btnAddSecenek").on("click", function (e) {
                 $.get('@Url.Action("SecenekEditor","Seceneks")', {}, function (r) {
                     $("#divSecenekler").append(r);
                 });
             });
+
         })
     </script>
 }

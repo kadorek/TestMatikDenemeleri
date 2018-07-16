@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Core;
@@ -9,6 +10,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using TestMatik_V1.Models;
+using TestMatik_V1.Addons;
 
 namespace TestMatik_V1.Controllers
 {
@@ -41,8 +43,9 @@ namespace TestMatik_V1.Controllers
         // GET: Sorus/Create
         public ActionResult Create()
         {
+            Soru s = new Soru() { SecenekList = new List<Secenek>() };
             ViewBag.KonuId = new SelectList(db.Konus, "Id", "Ad");
-            return View();
+            return View(s);
         }
 
         // POST: Sorus/Create
@@ -50,11 +53,22 @@ namespace TestMatik_V1.Controllers
         // daha fazla bilgi için https://go.microsoft.com/fwlink/?LinkId=317598 sayfasına bakın.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Metin,EkMetin,KonuId,Seviye")] Soru soru)
+        public ActionResult Create([Bind(Include = "Id,Metin,EkMetin,KonuId,Seviye,SecenekList")] Soru soru)
         {
             if (ModelState.IsValid)
             {
+
                 db.Sorus.Add(soru);
+                db.SaveChanges();
+                soru.SecenekList = db.Seceneks.AddRange(soru.SecenekList).ToList();
+                db.SaveChanges();
+                soru.SoruSeceneks = new Collection<SoruSecenek>((from scnk in soru.SecenekList
+                                                                 select new SoruSecenek
+                                                                 {
+                                                                     DogruMu = scnk.DogruMu,
+                                                                     SecenekId = scnk.Id,
+                                                                     SoruId = soru.Id
+                                                                 }).ToList());
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -76,6 +90,8 @@ namespace TestMatik_V1.Controllers
                 return HttpNotFound();
             }
             ViewBag.KonuId = new SelectList(db.Konus, "Id", "Ad", soru.KonuId);
+            //soru.SoruSeceneks.ToList().ForEach(x=>x.Secenek.DogruMu=x.DogruMu);
+            soru.SecenekList = soru.SoruSeceneks.Select(x => { x.Secenek.DogruMu = x.DogruMu; return x.Secenek; }).ToList();
             return View(soru);
         }
 
@@ -84,15 +100,33 @@ namespace TestMatik_V1.Controllers
         // daha fazla bilgi için https://go.microsoft.com/fwlink/?LinkId=317598 sayfasına bakın.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Metin,KonuId,Seviye")] Soru soru)
+        public ActionResult Edit([Bind(Include = "Id,Metin,KonuId,Seviye,SecenekList,YeniSecenekList")] Soru soru)
         {
             if (ModelState.IsValid)
             {
+                //var _s = db.Entry(soru);
+                //_s.State = EntityState.Modified;
                 db.Entry(soru).State = EntityState.Modified;
-
-               
+                soru.SecenekList.Do(x => db.Entry(x).State = EntityState.Modified);
+                db.SaveChanges();
+                if (soru.YeniSecenekList.Count > 0)
+                {
+                    soru.YeniSecenekList = db.Seceneks.AddRange(soru.YeniSecenekList).ToList();
                     db.SaveChanges();
-               
+                    soru.YeniSecenekList.Do(x =>
+                    {
+                        soru.SoruSeceneks.Add(new SoruSecenek
+                        {
+                            DogruMu = x.DogruMu,
+                            SecenekId = x.Id,
+                            SoruId = soru.Id
+                        });
+                    });
+                    db.SaveChanges();
+                }
+
+
+
                 return RedirectToAction("Index");
             }
             ViewBag.KonuId = new SelectList(db.Konus, "Id", "Ad", soru.KonuId);
@@ -127,7 +161,7 @@ namespace TestMatik_V1.Controllers
 
         public JsonResult DersinKonulari(string id)
         {
-            if (id==null)
+            if (id == null)
             {
                 return null;
             }
@@ -142,10 +176,11 @@ namespace TestMatik_V1.Controllers
 
 
 
-        public PartialViewResult KonuSorulari(string DersId, string KonuId) {
-            if (KonuId==null)
+        public PartialViewResult KonuSorulari(string DersId, string KonuId)
+        {
+            if (KonuId == null)
             {
-                KonuId="0";
+                KonuId = "0";
             }
 
             var kid = Convert.ToInt32(KonuId);
@@ -154,10 +189,10 @@ namespace TestMatik_V1.Controllers
             switch (kid)
             {
                 case 0:
-                    soruListesi = soruListesi.Where(x=>x.Konu.DersId.ToString()==DersId).ToList();
+                    soruListesi = soruListesi.Where(x => x.Konu.DersId.ToString() == DersId).ToList();
                     break;
                 default:
-                soruListesi = soruListesi.Where(x=>x.KonuId==kid).ToList();
+                    soruListesi = soruListesi.Where(x => x.KonuId == kid).ToList();
                     break;
             }
             //if (kid>0)

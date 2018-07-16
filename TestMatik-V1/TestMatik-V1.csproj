@@ -148,6 +148,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Addons\MyExtensions.cs" />
     <Compile Include="Addons\SessionCheck.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Models\SoruSinavSecenek.cs">
       <DependentUpon>Veriler.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SoruViewModel.cs" />
     <Compile Include="Models\User.cs">
       <DependentUpon>Veriler.tt</DependentUpon>
     </Compile>
@@ -271,6 +273,8 @@
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -580,7 +584,7 @@
     <Content Include="Views\Sorus\Create.cshtml" />
     <Content Include="Views\Sorus\Delete.cshtml" />
     <Content Include="Views\Sorus\Details.cshtml" />
-    <Content Include="Views\Sorus\Edit.cshtml" />
+    <Content Include="Views\Sorus\_Edit.cshtml" />
     <Content Include="Views\Sorus\Index.cshtml" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
@@ -601,6 +605,9 @@
     <Content Include="Views\Seceneks\_SecenekEkleControl.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\tinymce_jquery_full_secenek.cshtml" />
     <Content Include="Views\Seceneks\_SecenekEditor.cshtml" />
+    <Content Include="Views\Sorus\--Create.cshtml" />
+    <Content Include="Views\Sorus\Edit.cshtml" />
+    <Content Include="Views\Seceneks\_YeniSecenekEditor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

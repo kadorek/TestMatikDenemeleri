@@ -2,14 +2,11 @@
 
 @{
     ViewBag.Title = "Edit";
-    var db = new TestMatik_V1.Models.VerilerEntities();
-    var TumDersler = db.Ders.ToList();
-    TumDersler.Insert(0, new TestMatik_V1.Models.Der { Id = 0, Ad = "Ders Seçiniz" });
-
+    int index = Model.SecenekList.Count();
+    int yindex = 0;
 }
 
 <h2>Edit</h2>
-
 
 @using (Html.BeginForm())
 {
@@ -21,38 +18,57 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Metin, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Metin, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Metin, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="col-sm-5">
+                @Html.Partial("_DersKonuSelector", Model)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Metin, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Metin, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Metin, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Seviye, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Seviye, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Seviye, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-7">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4 style="float:left; margin-right:10px;">Seçenekler</h4>
+                    </div>
+                    <div id="secenekler" style="min-height:300px; max-height:300px; overflow-y:scroll; overflow-x:hidden; ">
+                        @{ var j = 0;}
+                        @foreach (var item in Model.SecenekList)
+                        {
+                            @Html.Action("SecenekEditor", "Seceneks", new { s = Model, index = j++ })
+                        }
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4 style="float:left; margin-right:10px;">Yeni Seçenekler </h4>
+                        @Ajax.ActionLink(linkText: "+", actionName: "YeniSecenekEditor", controllerName: "Seceneks", routeValues: new { yindex = yindex }, ajaxOptions: new AjaxOptions
+                        {
+                            InsertionMode = InsertionMode.InsertAfter,
+                            UpdateTargetId = "yenisecenekler",
+                            OnSuccess = "indexIterate"
+                        },
+htmlAttributes: new { id = "addSecenek", @class = "btn btn-default" })
+                        <a class="btn btn-default" id="removeSecenek">-</a>
+                    </div>
+                    <br />
+                    <div id="yenisecenekler"  style="min-height:350px; max-height:350px; overflow-y:scroll; overflow-x:hidden; ">
+                    </div>
+                </div>
             </div>
         </div>
-
-        @Html.Partial("_DersKonuSelector",Model)
-        @*<div class="form-group">
-            @Html.Label("Ders", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("slcDersler", new SelectList(TumDersler, "Id", "Ad"), htmlAttributes: new { @class = "form-control" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.KonuId, "KonuId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("KonuId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.KonuId, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Seviye, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Seviye, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Seviye, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-default" />
@@ -67,34 +83,33 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    @*<script>
+    @Scripts.Render("~/bundles/ajax")
+    <script>
+        var currentIndex = @(yindex);
+        function indexIterate() {
+            var tag = $("#addSecenek");
+            console.log("tag")
+            console.log(tag)
+            var newHref = $(tag[0]).prop("href");
+            console.log("href")
+            console.log(newHref);
+            var newerHref = newHref.replace(/(?:yindex=)[0-9]+/i, "yindex=" + ++currentIndex);
+            $("#addSecenek").attr("href", newerHref);
+        };
+
         $(document).ready(function () {
-            $("#KonuId").empty();
-            $("#slcDersler").on("change", function () {
-                $("#KonuId").empty();
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("DersinKonulari")', // we are calling json method
-                    dataType: 'json',
-                    data: { id: $("#slcDersler").val() },
-                    success: function (konular) {
-                        // states contains the JSON formatted list
-                        // of states passed from the controller
-
-                        $("#KonuId").append('<option value="' + "0" + '">' + "Konu Seçiniz" + '</option>');
-                        //debugger;
-                        $.each(konular, function (i, konu) {
-                            $("#KonuId").append('<option value="' + konu.Value + '">' + konu.Text + '</option>');
-                            // here we are adding option for States
-                        });
-                       
-                    },
-                    error: function (ex) {
-                        alert('Failed to retrieve konular.' + ex);
-                    }
+            $("#btnAddSecenek").on("click", function (e) {
+                $.get('@Url.Action("SecenekEditor","Seceneks")', {}, function (r) {
+                    $("#divSecenekler").append(r);
                 });
+            });
 
-            })
-        });
-    </script>*@
+            $("#removeSecenek").on("click", function () {
+                $("#yenisecenekler>div:first").remove();
+                currentIndex--;
+            });
+
+
+        })
+    </script>
 }
